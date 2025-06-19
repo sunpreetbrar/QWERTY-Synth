@@ -52,7 +52,7 @@ const synthPresets = {
 const reverb = new Tone.Reverb().toDestination();
 reverb.decay = 3;
 reverb.wet.value = 0.4;
-let currentSynth = synthPresets.piano().connect(reverb);
+let currentSynth = synthPresets.lead().connect(reverb);
 
 // Global variable declarations
 const pressedKeys = new Set();
@@ -459,7 +459,11 @@ function setupApp() {
   }, { once: true });
 }
 
-setupApp();
+// Set instrument-select to 'lead' by default in the UI
+const instrumentSelect = document.getElementById('instrument-select');
+if (instrumentSelect) {
+  instrumentSelect.value = 'lead';
+}
 
 // --- FIXED KEYMAP ---
 const keyMap = { c: 0, d: 1, e: 2, f: 3, g: 4, a: 5, b: 6 };
