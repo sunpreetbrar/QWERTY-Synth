@@ -440,14 +440,21 @@ function setupApp() {
   if (!btn || !overlay) return;
   btn.addEventListener('click', async function handleStartAudio() {
     btn.disabled = true;
+    overlay.innerHTML += '<div id="audio-wait-msg" style="color:#fff;background:#222;padding:0.5em;margin:1em auto;max-width:400px;z-index:9999;">Attempting to start audio context...</div>';
     try {
+      console.log('Attempting Tone.start()...');
       await Tone.start();
       window.__audioStarted = true;
       overlay.style.display = 'none';
+      console.log('Audio context started, overlay hidden.');
     } catch (err) {
-      overlay.innerHTML += '<div style="color:#fff;background:#a00;padding:1em;margin:2em auto;max-width:500px;z-index:9999;">ERROR: Audio context could not be started. ' + (err?.message || err) + '</div>';
+      console.error('Tone.start() failed:', err);
+      overlay.innerHTML += '<div style="color:#fff;background:#a00;padding:1em;margin:2em auto;max-width:500px;z-index:9999;">ERROR: Audio context could not be started. ' + (err?.message || err) + '<br>Try clicking the button again, or check your browser settings for autoplay/audio permissions.</div>';
       btn.disabled = false;
       return;
+    } finally {
+      const waitMsg = document.getElementById('audio-wait-msg');
+      if (waitMsg) waitMsg.remove();
     }
     try {
       setupInstrumentSelector();
@@ -456,7 +463,7 @@ function setupApp() {
     } catch (err) {
       document.body.innerHTML += '<div style="color:#fff;background:#a00;padding:1em;margin:2em auto;max-width:500px;z-index:9999;">ERROR: App initialization failed. ' + (err?.message || err) + '</div>';
     }
-  }, { once: true });
+  }, { once: false }); // Allow multiple attempts
 }
 
 
