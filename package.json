@@ -1,0 +1,14 @@
+{
+  "name": "tonejs-project",
+  "version": "1.0.0",
+  "description": "A project utilizing Tone.js to create a synthesizer and trigger notes.",
+  "main": "src/experiment.js",
+  "scripts": {
+    "start": "node src/experiment.js"
+  },
+  "dependencies": {
+    "tone": "^14.8.37"
+  },
+  "author": "",
+  "license": "ISC"
+}

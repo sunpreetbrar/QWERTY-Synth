@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="mobile-block.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QWERTY Synth</title>
+    <link rel="stylesheet" href="style.css" />
+    <!-- Tone.js from CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/tone@14.7.77/build/Tone.min.js"></script>
+</head>
+<body>
+<section id="synth-app" class="qwerty-synth-app-wrapper">
+  <div class="synth-content-area">
+    <h1 class="synth-title">QWERTY Synth</h1>
+    <div class="keyboard-section">
+      <div class="keyboard-controls-wrapper">
+        <div class="control-group preset-controls">
+          <span class="control-label">Preset</span>
+          <div class="control-buttons">
+            <button class="control-button arrow-button" id="preset-left"><img src="assets/left arrow.svg" alt="Previous Preset"></button>
+            <div class="control-display"><span class="control-value-text" id="preset-display">Piano</span></div>
+            <button class="control-button arrow-button" id="preset-right"><img src="assets/right arrow.svg" alt="Next Preset"></button>
+          </div>
+        </div>
+        <div class="control-group bpm-controls">
+          <span class="control-label">BPM</span>
+          <div class="control-buttons">
+            <button class="control-button arrow-button" id="bpm-left"><img src="assets/left arrow.svg" alt="Decrease BPM"></button>
+            <div class="control-display"><span class="control-value-text" id="bpm-display">100</span></div>
+            <button class="control-button arrow-button" id="bpm-right"><img src="assets/right arrow.svg" alt="Increase BPM"></button>
+          </div>
+        </div>
+        <div class="control-group arpeggiate-controls">
+          <span class="control-label">Auto Arpeggiate</span>
+          <div class="toggle-switch" id="arpeggiate-toggle">
+            <div class="toggle-knob"></div>
+          </div>
+        </div>
+        <div class="control-group octave-controls">
+          <span class="control-label">Octave</span>
+          <div class="control-buttons">
+            <button class="control-button arrow-button" id="octave-left"><img src="assets/left arrow.svg" alt="Decrease Octave"></button>
+            <div class="control-display"><span class="control-value-text" id="octave-display">4</span></div>
+            <button class="control-button arrow-button" id="octave-right"><img src="assets/right arrow.svg" alt="Increase Octave"></button>
+          </div>
+        </div>
+      </div>
+      <div class="keyboard-container">
+        <!-- 6 Octaves -->
+        <div class="keyboard-octaves">
+          <!-- Repeat .octave-wrapper 6 times -->
+          <div class="octave-wrapper">
+            <div class="white-keys">
+              <div class="key white-key"></div>
+              <div class="key white-key"></div>
+              <div class="key white-key"></div>
+              <div class="key white-key"></div>
+              <div class="key white-key"></div>
+              <div class="key white-key"></div>
+              <div class="key white-key"></div>
+            </div>
+            <div class="black-keys">
+              <div class="key black-key black-key-c-sharp"></div>
+              <div class="key black-key black-key-d-sharp"></div>
+              <div class="key black-key black-key-f-sharp"></div>
+              <div class="key black-key black-key-g-sharp"></div>
+              <div class="key black-key black-key-a-sharp"></div>
+            </div>
+          </div>
+          <div class="octave-wrapper">
+            <div class="white-keys">
+              <div class="key white-key"></div>
+              <div class="key white-key"></div>
+              <div class="key white-key"></div>
+              <div class="key white-key"></div>
+              <div class="key white-key"></div>
+              <div class="key white-key"></div>
+              <div class="key white-key"></div>
+            </div>
+            <div class="black-keys">
+              <div class="key black-key black-key-c-sharp"></div>
+              <div class="key black-key black-key-d-sharp"></div>
+              <div class="key black-key black-key-f-sharp"></div>
+              <div class="key black-key black-key-g-sharp"></div>
+              <div class="key black-key black-key-a-sharp"></div>
+            </div>
+          </div>
+          <div class="octave-wrapper">
+            <div class="white-keys">
+              <div class="key white-key"></div>
+              <div class="key white-key"></div>
+              <div class="key white-key"></div>
+              <div class="key white-key"></div>
+              <div class="key white-key"></div>
+              <div class="key white-key"></div>
+              <div class="key white-key"></div>
+            </div>
+            <div class="black-keys">
+              <div class="key black-key black-key-c-sharp"></div>
+              <div class="key black-key black-key-d-sharp"></div>
+              <div class="key black-key black-key-f-sharp"></div>
+              <div class="key black-key black-key-g-sharp"></div>
+              <div class="key black-key black-key-a-sharp"></div>
+            </div>
+          </div>
+          <div class="octave-wrapper">
+            <div class="white-keys">
+              <div class="key white-key"></div>
+              <div class="key white-key"></div>
+              <div class="key white-key"></div>
+              <div class="key white-key"></div>
+              <div class="key white-key"></div>
+              <div class="key white-key"></div>
+              <div class="key white-key"></div>
+            </div>
+            <div class="black-keys">
+              <div class="key black-key black-key-c-sharp"></div>
+              <div class="key black-key black-key-d-sharp"></div>
+              <div class="key black-key black-key-f-sharp"></div>
+              <div class="key black-key black-key-g-sharp"></div>
+              <div class="key black-key black-key-a-sharp"></div>
+            </div>
+          </div>
+          <div class="octave-wrapper">
+            <div class="white-keys">
+              <div class="key white-key"></div>
+              <div class="key white-key"></div>
+              <div class="key white-key"></div>
+              <div class="key white-key"></div>
+              <div class="key white-key"></div>
+              <div class="key white-key"></div>
+              <div class="key white-key"></div>
+            </div>
+            <div class="black-keys">
+              <div class="key black-key black-key-c-sharp"></div>
+              <div class="key black-key black-key-d-sharp"></div>
+              <div class="key black-key black-key-f-sharp"></div>
+              <div class="key black-key black-key-g-sharp"></div>
+              <div class="key black-key black-key-a-sharp"></div>
+            </div>
+          </div>
+          <div class="octave-wrapper">
+            <div class="white-keys">
+              <div class="key white-key"></div>
+              <div class="key white-key"></div>
+              <div class="key white-key"></div>
+              <div class="key white-key"></div>
+              <div class="key white-key"></div>
+              <div class="key white-key"></div>
+              <div class="key white-key"></div>
+            </div>
+            <div class="black-keys">
+              <div class="key black-key black-key-c-sharp"></div>
+              <div class="key black-key black-key-d-sharp"></div>
+              <div class="key black-key black-key-f-sharp"></div>
+              <div class="key black-key black-key-g-sharp"></div>
+              <div class="key black-key black-key-a-sharp"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="octave-wrapper">
+          <div class="white-keys">
+            <div class="white-key"></div>
+            <div class="white-key"></div>
+            <div class="white-key"></div>
+            <div class="white-key"></div>
+            <div class="white-key"></div>
+            <div class="white-key"></div>
+            <div class="white-key"></div>
+          </div>
+          <div class="black-keys-2">
+            <div class="black-key"></div>
+            <div class="black-key"></div>
+          </div>
+          <div class="black-keys-3">
+            <div class="black-key"></div>
+            <div class="black-key"></div>
+            <div class="black-key"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="legend-section">
+      <div class="instruction-box">
+        <p class="instruction-text">Use keys A–G to play chords; combine with Shift, [ , ] , or Space to modify.</p>
+      </div>
+      <div class="key-mappings-box">
+        <div class="major-chords-row">
+          <div class="key-labels">
+            <div class="key-label-box"><span class="key-char">C</span></div>
+            <div class="key-label-box"><span class="key-char">D</span></div>
+            <div class="key-label-box"><span class="key-char">E</span></div>
+            <div class="key-label-box"><span class="key-char">F</span></div>
+            <div class="key-label-box"><span class="key-char">G</span></div>
+            <div class="key-label-box"><span class="key-char">A</span></div>
+            <div class="key-label-box"><span class="key-char">B</span></div>
+          </div>
+          <span class="key-mapping-description">Major Chords</span>
+        </div>
+        <hr class="legend-separator">
+        <div class="modifiers-area">
+          <div class="vinyl-image">
+            <img src="assets/vinyl.png" alt="vinyl" />
+          </div>
+          <div class="modifier-descriptions">
+            <div class="modifier-item">
+              <div class="modifier-key-combo">
+                <span class="modifier-plus">+</span>
+                <div class="modifier-key-box"><span class="modifier-key-text">Shift</span></div>
+              </div>
+              <span class="modifier-text">Minor Chord</span>
+            </div>
+            <div class="modifier-item">
+              <div class="modifier-key-combo">
+                <span class="modifier-plus">+</span>
+                <div class="modifier-key-box"><span class="modifier-key-text">Space</span></div>
+              </div>
+              <span class="modifier-text">Sharps</span>
+            </div>
+            <div class="modifier-item">
+              <div class="modifier-key-combo">
+                <span class="modifier-plus">+</span>
+                <div class="modifier-key-box"><span class="modifier-key-text">[</span></div>
+              </div>
+              <span class="modifier-text">Power Chord</span>
+            </div>
+            <div class="modifier-item">
+              <div class="modifier-key-combo">
+                <span class="modifier-plus">+</span>
+                <div class="modifier-key-box"><span class="modifier-key-text">]</span></div>
+              </div>
+              <span class="modifier-text">Seventh Chord</span>
+            </div>
+            <div class="modifier-item">
+              <div class="modifier-key-combo">
+                <span class="modifier-plus">+</span>
+                <div class="modifier-key-box arrow-key-box"><img src="assets/up arrow.svg" alt="Up arrow"></div>
+                <span class="modifier-plus">/</span>
+                <div class="modifier-key-box arrow-key-box"><img src="assets/down arrow.svg" alt="Down arrow"></div>
+              </div>
+              <span class="modifier-text">Arpeggiate Up / Down</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <footer class="synth-footer">
+      <p class="footer-text">© <span class="underlined">Sunpreet Singh</span>, 2025</p>
+    </footer>
+  </div>
+
+</section>
+<!-- Overlay and controls for audio unlock and status -->
+<div id="start-overlay" style="position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.8);z-index:1000;display:flex;justify-content:center;align-items:center;">
+  <div class="start-overlay-box">
+    
+    <p class="start-overlay-desc">Click below to enable audio and start playing!</p>
+    <button id="start-btn" class="start-overlay-btn">Start Audio</button>
+  </div>
+</div>
+<div id="status" style="display:none;"></div>
+<!-- Hidden selects and input for synth.js compatibility -->
+<select id="instrument-select" style="display:none;">
+  <option value="piano">Piano</option>
+  <option value="lead">Lead</option>
+  <option value="organ">Organ</option>
+</select>
+<select id="octave-select" style="display:none;">
+  <option value="2">2</option>
+  <option value="3">3</option>
+  <option value="4" selected>4</option>
+  <option value="5">5</option>
+</select>
+<input type="number" id="bpm-input" value="100" style="display:none;" />
+<!-- Main synth logic as a module -->
+<script type="module" src="src/synth.js"></script>
+</body>
+</html>
