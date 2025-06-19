@@ -52,7 +52,7 @@ const synthPresets = {
 const reverb = new Tone.Reverb().toDestination();
 reverb.decay = 3;
 reverb.wet.value = 0.4;
-let currentSynth = synthPresets.lead().connect(reverb);
+let currentSynth = synthPresets.piano().connect(reverb);
 
 // Global variable declarations
 const pressedKeys = new Set();
@@ -459,10 +459,17 @@ function setupApp() {
   }, { once: true });
 }
 
-// Set instrument-select to 'lead' by default in the UI
+
+// Set octave-select to '3' by default in the UI
+const octaveSelect = document.getElementById('octave-select');
+if (octaveSelect) {
+  octaveSelect.value = '3';
+}
+
+// Set instrument-select to 'piano' by default in the UI
 const instrumentSelect = document.getElementById('instrument-select');
 if (instrumentSelect) {
-  instrumentSelect.value = 'lead';
+  instrumentSelect.value = 'piano';
 }
 
 // --- FIXED KEYMAP ---
@@ -511,7 +518,6 @@ document.getElementById('bpm-right').onclick = () => {
 };
 // Octave
 const octaveDisplay = document.getElementById('octave-display');
-const octaveSelect = document.getElementById('octave-select');
 document.getElementById('octave-left').onclick = () => {
   let octave = Math.max(2, parseInt(octaveSelect.value) - 1);
   octaveSelect.value = octave;
@@ -571,3 +577,5 @@ function getAscendingChordNotes(notes) {
   });
   return result;
 }
+
+setupApp();
