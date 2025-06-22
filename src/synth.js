@@ -81,6 +81,7 @@ function getChordNotes(root, type) {
   if (rootIndex === -1) return [];
   let intervals;
   if (type === "major7") intervals = [0, 4, 7, 11];
+  else if (type === "dom7") intervals = [0, 4, 7, 10]; // Dominant 7th
   else if (type === "minor7") intervals = [0, 3, 7, 10];
   else if (type === "fifth") intervals = [0, 7];
   else if (type === "minor") intervals = [0, 3, 7];
@@ -172,6 +173,28 @@ function stopArpeggio() {
   clearKeyboardHighlights(); // Always clear, no conditions
 }
 
+// --- INVERSION HELPERS ---
+function getChordInversion(notes, inversion) {
+  // notes: array of note strings like ["C4","E4","G4"]
+  // inversion: 0 = root, 1 = 1st inversion, 2 = 2nd inversion
+  if (!notes || notes.length < 2 || inversion === 0) return notes;
+  // Parse notes into {note, octave}
+  const noteOrder = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
+  let parsed = notes.map(n => {
+    const m = n.match(/^([A-G]#?)(\d)$/);
+    return m ? { note: m[1], octave: parseInt(m[2]) } : null;
+  });
+  if (parsed.includes(null)) return notes;
+  // For each inversion, move the lowest note up one octave
+  for (let i = 0; i < inversion; i++) {
+    let lowest = parsed.shift();
+    lowest.octave += 1;
+    parsed.push(lowest);
+  }
+  // Rebuild note strings
+  return parsed.map(n => n.note + n.octave);
+}
+
 function getCurrentHeldNotes() {
   if (!heldNoteKey) return [];
   let note = keyToNote[heldNoteKey];
@@ -179,7 +202,13 @@ function getCurrentHeldNotes() {
   let chordType = pressedKeys.has("Shift") ? "minor" : "major";
   if (pressedKeys.has("]")) chordType = chordType + "7";
   if (pressedKeys.has("[")) chordType = "fifth";
-  return getChordNotes(note, chordType);
+  let notes = getChordNotes(note, chordType);
+  // Inversion logic: left arrow = 1st, right arrow = 2nd
+  let inversion = 0;
+  if (pressedKeys.has("ArrowLeft")) inversion = 1;
+  if (pressedKeys.has("ArrowRight")) inversion = 2;
+  notes = getChordInversion(notes, inversion);
+  return notes;
 }
 
 // Helper: note name to key index in octave
@@ -226,7 +255,9 @@ function clearKeyboardHighlights() {
 }
 
 function highlightSingleKeyboardKey(note) {
+  
   clearKeyboardHighlights();
+
   if (!note) return;
   // Find the octave wrapper for the note's octave
   const match = note.match(/^([A-G]#?)(\d)$/);
@@ -280,7 +311,7 @@ function stopAutoAlternatingArpeggio() {
 function setupKeyboard() {
   window.addEventListener("keydown", async (e) => {
     // Prevent scrolling for spacebar and arrow keys
-    if ([" ", "ArrowUp", "ArrowDown"].includes(e.key)) {
+    if ([" ", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.key)) {
       e.preventDefault();
     }
     if (e.repeat) return;
@@ -294,7 +325,13 @@ function setupKeyboard() {
       let chordType = pressedKeys.has("Shift") ? "minor" : "major";
       if (pressedKeys.has("]")) chordType = chordType + "7";
       if (pressedKeys.has("[")) chordType = "fifth";
-      const notes = getChordNotes(note, chordType);
+      if (pressedKeys.has("\\")) chordType = "major7";
+      let notes = getChordNotes(note, chordType);
+      // Inversion logic
+      let inversion = 0;
+      if (pressedKeys.has("ArrowLeft")) inversion = 1;
+      if (pressedKeys.has("ArrowRight")) inversion = 2;
+      notes = getChordInversion(notes, inversion);
       await Tone.start();
       if (currentSynth && typeof currentSynth.load === 'function' && typeof currentSynth.loaded !== 'undefined' && !currentSynth.loaded) {
         await currentSynth.load();
@@ -308,7 +345,7 @@ function setupKeyboard() {
         `keydown: key=${e.key}, code=${e.code}, arpeggiate=ON, heldNotes=${heldNotes.join(',')}`;
       return;
     }
-    if ((["Shift", " ", "[", "]"].includes(e.key)) && heldNoteKey) {
+    if ((["Shift", " ", "[", "]", "\\", "ArrowLeft", "ArrowRight"].includes(e.key)) && heldNoteKey) {
       const notes = getCurrentHeldNotes();
       heldNotes = notes;
       highlightKeyboardKeys(notes);
@@ -332,14 +369,20 @@ function setupKeyboard() {
       heldArp = true;
       return;
     }
-    if (["[", "]", "ArrowUp", "ArrowDown"].includes(e.key)) return;
+    if (["[", "]", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "\\"].includes(e.key)) return;
     if (!keyToNote[key]) return;
     let note = keyToNote[key];
     if (pressedKeys.has(" ")) note += "#";
     let chordType = pressedKeys.has("Shift") ? "minor" : "major";
-    if (pressedKeys.has("]")) chordType = chordType + "7";
+    if (pressedKeys.has("]")) chordType = "dom7";
     if (pressedKeys.has("[")) chordType = "fifth";
-    const notes = getChordNotes(note, chordType);
+    if (pressedKeys.has("\\")) chordType = "major7";
+    let notes = getChordNotes(note, chordType);
+    // Inversion logic
+    let inversion = 0;
+    if (pressedKeys.has("ArrowLeft")) inversion = 1;
+    if (pressedKeys.has("ArrowRight")) inversion = 2;
+    notes = getChordInversion(notes, inversion);
     await Tone.start();
     if (currentSynth && typeof currentSynth.load === 'function' && typeof currentSynth.loaded !== 'undefined' && !currentSynth.loaded) {
       await currentSynth.load();
@@ -376,7 +419,7 @@ function setupKeyboard() {
         `keyup: key=${e.key}, code=${e.code}, arpeggiate=ON`;
       return;
     }
-    if ((["Shift", " ", "[", "]"].includes(e.key)) && heldNoteKey) {
+    if ((["Shift", " ", "[", "]", "\\", "ArrowLeft", "ArrowRight"].includes(e.key)) && heldNoteKey) {
       const notes = getCurrentHeldNotes();
       heldNotes = notes;
       highlightKeyboardKeys(notes);
