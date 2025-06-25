@@ -563,6 +563,9 @@ align-items: center;
   .synth-footer {
     padding-top: 20px;
     text-align: center;
+    flex-direction: row;
+    justify-content: center;
+    display: flex; gap: 1rem; align-items: center;
   }
 
   .footer-text {
@@ -574,9 +577,22 @@ align-items: center;
     line-height: 30px;
     letter-spacing: 1.6px;
     margin: 0;
+    text-decoration: underline;
+    text-decoration-color: rgba(221, 221, 221, 0.9);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 4px;
+
   }
   .footer-text .underlined {
     font-family: 'Sk-Modernist', 'Helvetica Neue', sans-serif;
+    color: #d0d0d0;
+    text-decoration: underline;
+  }
+  .footer-icon {
+    width: 1.5rem;
+    height: 1.5rem;
+    margin-right: 0.5rem;
+    vertical-align: middle;
   }
 
   /* --- LAYERED Z-INDEX STACKING FOR BLEND MODES --- */
